@@ -1,0 +1,19 @@
+{
+  "name": "pdfgenerator",
+  "version": "1.0.0",
+  "description": "A pdf generator that generates the information in form of a letter in different styles (officiel letter, letter to send to a pen pal).",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MariaPetersen/PDFLetterGenerator.git"
+  },
+  "author": "Maria Petersen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MariaPetersen/PDFLetterGenerator/issues"
+  },
+  "homepage": "https://github.com/MariaPetersen/PDFLetterGenerator#readme"
+}
