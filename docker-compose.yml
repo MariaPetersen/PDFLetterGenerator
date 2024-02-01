@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  backend:
+    image: pdfgenerator-dev-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: pdfgenerator-backend
+    volumes:
+      - ./src:/api/src
+    ports:
+      - 8000:8000
+    environment:
+      - NODE_ENV=development
+  frontend:
+    image: pdfgenerator-dev-front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: pdfgenerator-frontend
+    depends_on:
+      - backend
+    volumes:
+      - ./src:/front/src
+    ports:
+      - 3000:3000
