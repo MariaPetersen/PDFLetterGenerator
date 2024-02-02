@@ -1,10 +1,7 @@
-import express, { Application, Request, Response } from "express";
-
+const app = require("./app");
 const PORT = process.env.PORT || 8000;
 
-const app: Application = express();
-
-app.get("/ping", async (_req, res) => {
+app.post("/generatePdf", async (req: Request, res: Response) => {
   res.send({
     message: "pong",
   });

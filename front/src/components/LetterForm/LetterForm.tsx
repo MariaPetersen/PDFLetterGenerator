@@ -1,50 +1,74 @@
-import * as React from "react";
+import { FormEvent, useEffect, useState } from "react";
+import AddressComponent from "./../AddressComponent/AddressComponent";
+import "./styles.scss";
+import { IAddress } from "../../interfaces/IAddress";
+import ILetterData from "../../interfaces/ILetterData";
+import Api from "../../services/Api";
 
-export interface ILetterFormProps {}
+function LetterForm() {
+  const [sender, setSender] = useState<IAddress>({
+    firstName: "",
+    lastName: "",
+    street: "",
+    zip: "",
+    town: "",
+    country: "",
+  });
+  const [receiver, setReceiver] = useState<IAddress>({
+    firstName: "",
+    lastName: "",
+    street: "",
+    zip: "",
+    town: "",
+    country: "",
+  });
 
-export function LetterForm(props: ILetterFormProps) {
+  const [letterParagraphs, setLetterParagraps] = useState<Array<string>>([]);
+  const [textContent, setTextContent] = useState<string>();
+  const api = new Api();
+
+  useEffect(() => {
+    if (textContent) {
+      const textArray: Array<string> = textContent.split("\n");
+      setLetterParagraps([...textArray]);
+    }
+  }, [textContent]);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const letterData: ILetterData = {
+      sender,
+      receiver,
+      paragraphs: letterParagraphs,
+    };
+    api.generateLetterPDF(letterData);
+  }
+
   return (
     <div>
-      <form>
-        <h3>Informations de l'expéditeur</h3>
-        <div>
-          <label htmlFor="firstName">Prénom</label>
-          <input type="text" name="firstName" id="firstName" />
-          <label htmlFor="secondName">Nom de famille</label>
-          <input type="text" name="secondName" id="secondName" />
-          <label htmlFor="street">Adresse</label>
-          <input
-            type="text"
-            name="street"
-            id="street"
-            placeholder="31 rue Mouffetard"
-          />
-          <label htmlFor="zip">Code postal</label>
-          <input type="text" name="zip" id="zip" />
-          <label htmlFor="town">Ville</label>
-          <input type="text" name="town" id="town" />
+      <form onSubmit={handleSubmit}>
+        <div className="address__container">
+          <div>
+            <h3>Informations de l'expéditeur</h3>
+            <AddressComponent address={sender} setAddress={setSender} />
+          </div>
+          <div>
+            <h3>Informations du déstinataire</h3>
+            <AddressComponent address={receiver} setAddress={setReceiver} />
+          </div>
         </div>
-        <h3>Informations du déstinataire</h3>
-        <div>
-          <label htmlFor="firstName">Prénom</label>
-          <input type="text" name="firstName" id="firstName" />
-          <label htmlFor="secondName">Nom de famille</label>
-          <input type="text" name="secondName" id="secondName" />
-          <label htmlFor="street">Adresse</label>
-          <input
-            type="text"
-            name="street"
-            id="street"
-            placeholder="31 rue Mouffetard"
-          />
-          <label htmlFor="zip">Code postal</label>
-          <input type="text" name="zip" id="zip" />
-          <label htmlFor="town">Ville</label>
-          <input type="text" name="town" id="town" />
-        </div>
-        <h3>Corps de la lettre</h3>
-        <div>
-          <textarea name="content" id="content" cols={30} rows={10}></textarea>
+        <div className="letterContent__container">
+          <h3>Corps de la lettre</h3>
+          <textarea
+            name="content"
+            id="content"
+            className="letterContent__textarea"
+            rows={20}
+            value={textContent}
+            onChange={(e) => {
+              setTextContent(e.target.value);
+            }}
+          ></textarea>
         </div>
         {/* Select greeting */}
         <div>
@@ -54,3 +78,5 @@ export function LetterForm(props: ILetterFormProps) {
     </div>
   );
 }
+
+export default LetterForm;

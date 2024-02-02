@@ -1,5 +1,5 @@
 import React from "react";
-import { LetterForm } from "../../components/LetterForm/LetterForm";
+import LetterForm from "../../components/LetterForm/LetterForm";
 
 function Home() {
   return (
