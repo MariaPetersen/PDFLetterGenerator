@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+
+        table {
+            width: "100%"
+        }
+
+        .sender-info {
+            text-align: right;
+        }
+
+        .receiver-info {
+            text-align: left;
+        }
+
+        .letter-content {
+            margin-top: 100px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .name {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="letter-container">
+        <div class="receiver-info">
+            <p class="name">
+                <%= receiver.firstName %>
+                    <%= receiver.lastName.toUpperCase() %>
+            </p>
+            <p>
+                <%= receiver.street %>
+            </p>
+            <p>
+                <%= receiver.zip %>
+                    <%= receiver.town %>
+            </p>
+            <p>
+                <%= receiver.country %>
+            </p>
+        </div>
+    </div>
+
+    <div class="sender-info">
+        <p class="name">
+            <%= sender.firstName %>
+                <%= sender.lastName.toUpperCase() %>
+        </p>
+        <p>
+            <%= sender.street %>
+        </p>
+        <p>
+            <%= sender.zip %>
+                <%= sender.town %>
+        </p>
+        <p>
+            <%= sender.country %>
+        </p>
+    </div>
+
+    <div class="letter-content">
+        <% paragraphs.forEach((paragraph)=> { %>
+            <p>
+                <%= paragraph %>
+            </p>
+            <% }); %>
+    </div>
+</body>
+
+</html>

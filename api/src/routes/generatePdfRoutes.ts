@@ -1,12 +1,9 @@
 const express = require("express");
+const {
+  generateLetterPdfCtrl,
+} = require("../controllers/generatePdfController");
+
 const router = express.Router();
-const generatePdfCtrl = require("../controllers/generatePdfController");
-const generatePdfUseCases = require("../usecases/generatePdfUseCase");
 
-router.post(
-  "/",
-  generatePdfCtrl.generateLetterPdfCtrl,
-  generatePdfUseCases.generateLetterPdfUseCase
-);
-
+router.post("/", generateLetterPdfCtrl);
 module.exports = router;

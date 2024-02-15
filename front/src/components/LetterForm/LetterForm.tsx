@@ -34,14 +34,15 @@ function LetterForm() {
     }
   }, [textContent]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const letterData: ILetterData = {
       sender,
       receiver,
       paragraphs: letterParagraphs,
     };
-    api.generateLetterPDF(letterData);
+    console.log(letterData);
+    const letter = await api.generateLetterPDF(letterData);
   }
 
   return (
