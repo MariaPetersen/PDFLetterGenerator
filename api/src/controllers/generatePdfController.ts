@@ -1,13 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
+import { IAuthRequest } from "./../interfaces/IAuthRequest";
+const pdfDatabase = require("./../services/database/pdfDatabase");
 const { generatePdf } = require("./../services/pdfGenerator/generatePdfFile");
 
 exports.generateLetterPdf = async (
-  req: Request,
+  req: IAuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { receiver, sender, paragraphs, object, greeting } = req.body;
+    const { userId } = req.auth;
     if (!receiver || !sender || !paragraphs || !object || !greeting) {
       throw Error(
         "Missing parameter, request must include receiver, sender and paragraphs"
@@ -21,6 +24,14 @@ exports.generateLetterPdf = async (
       greeting,
     };
     const pdf = await generatePdf("letter.ejs", data);
+
+    const dataJson = JSON.stringify(data);
+
+    const savedPdf = await pdfDatabase.saveUserPdf(dataJson, userId);
+
+    if (!savedPdf) {
+      throw Error("Something went wrong while saving pdf");
+    }
 
     res.contentType("application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=letter.pdf");

@@ -1,12 +1,52 @@
-import React from "react";
+import React, { useContext } from "react";
 import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Home from "./pages/Home/Home";
+import LoginAndSignupForm from "./pages/LoginAndSignupForm/LoginAndSignupForm";
+import { AuthContext } from "./utils/contexts/AuthContext";
+import LetterForm from "./components/LetterForm/LetterForm";
+import ProtectedRoutes from "./utils/contexts/ProtectedRoutes";
+import History from "./pages/History/History";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginAndSignupForm type="login" />,
+      },
+      {
+        path: "/signup",
+        element: <LoginAndSignupForm type="signup" />,
+      },
+      {
+        element: <ProtectedRoutes />,
+        children: [
+          {
+            path: "/generatepdf",
+            element: <LetterForm />,
+          },
+          {
+            path: "/history",
+            element: <History />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Home />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

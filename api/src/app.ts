@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from "express";
 
 const generatePdfRouter = require("./routes/generatePdfRoutes");
 const userRouter = require("./routes/userRoutes");
+const historyRouter = require("./routes/histoyRoutes");
 
 const app = express();
 
@@ -40,5 +41,6 @@ app.get("/", async (req: Request, res: Response) => {
 //Routes
 app.use("/generatePdf", generatePdfRouter);
 app.use("/user", userRouter);
+app.use("/history", historyRouter);
 
 module.exports = app;

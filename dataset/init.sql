@@ -11,6 +11,7 @@ CREATE TABLE users (
 CREATE TABLE pdfs(
     pdf_id SERIAL,
     user_id INT,
+    type VARCHAR(255),
     pdf_data TEXT,
     created_at DATE,
     CONSTRAINT fk_user

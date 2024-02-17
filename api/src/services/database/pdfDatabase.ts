@@ -30,7 +30,7 @@ exports.saveUserPdf = async (pdfData: string, userId: string) => {
   }
 };
 
-exports.deleteUserPdf = async (pdfId: string) => {
+exports.deleteUserPdf = async (pdfId: number) => {
   const saveUserPdfQuery = "DELETE FROM pdfs WHERE pdf_id = $1";
   try {
     await query(saveUserPdfQuery, [pdfId]);

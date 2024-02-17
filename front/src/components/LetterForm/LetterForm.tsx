@@ -57,7 +57,6 @@ function LetterForm() {
       greeting: selectedGreeting,
     };
     api.generateLetterPDF(letterData).then((response) => {
-      console.log(response);
       response.blob().then((blob) => {
         const fileURL = window.URL.createObjectURL(blob);
         setPdfURL(fileURL);
