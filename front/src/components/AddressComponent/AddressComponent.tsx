@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { IAddress } from "../../interfaces/IAddress";
 import "./styles.scss";
+import { Stack, TextField } from "@mui/material";
 
 type AddressComponentProps = {
   address: IAddress;
@@ -9,9 +10,10 @@ type AddressComponentProps = {
 
 function AddressComponent({ address, setAddress }: AddressComponentProps) {
   return (
-    <div className="addressForm__container">
-      <label htmlFor="firstName">Prénom</label>
-      <input
+    <Stack flexDirection="column" spacing={2}>
+      <TextField
+        size="small"
+        label="Prénom"
         type="text"
         id="firstName"
         value={address.firstName}
@@ -19,17 +21,19 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
           setAddress({ ...address, firstName: e.target.value });
         }}
       />
-      <label htmlFor="lastName">Nom de famille</label>
-      <input
+      <TextField
+        size="small"
         type="text"
         id="lastName"
+        label="Nom de famille"
         value={address.lastName}
         onChange={(e) => {
           setAddress({ ...address, lastName: e.target.value });
         }}
       />
-      <label htmlFor="street">Adresse</label>
-      <input
+      <TextField
+        size="small"
+        label="Adresse"
         type="text"
         id="street"
         placeholder="31 rue Mouffetard"
@@ -38,8 +42,9 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
           setAddress({ ...address, street: e.target.value });
         }}
       />
-      <label htmlFor="zip">Code postal</label>
-      <input
+      <TextField
+        size="small"
+        label="Code postal"
         type="text"
         id="zip"
         value={address.zip}
@@ -47,8 +52,9 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
           setAddress({ ...address, zip: e.target.value });
         }}
       />
-      <label htmlFor="town">Ville</label>
-      <input
+      <TextField
+        size="small"
+        label="Ville"
         type="text"
         id="town"
         value={address.town}
@@ -56,8 +62,9 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
           setAddress({ ...address, town: e.target.value });
         }}
       />
-      <label htmlFor="country">Pays</label>
-      <input
+      <TextField
+        size="small"
+        label="Pays"
         type="text"
         id="country"
         value={address.country}
@@ -65,7 +72,7 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
           setAddress({ ...address, country: e.target.value });
         }}
       />
-    </div>
+    </Stack>
   );
 }
 

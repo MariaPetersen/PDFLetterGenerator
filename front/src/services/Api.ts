@@ -1,4 +1,3 @@
-import { response } from "express";
 import ILetterData from "../interfaces/ILetterData";
 
 class Api {
@@ -10,7 +9,7 @@ class Api {
       },
       body: JSON.stringify(data),
     });
-    return response.json();
+    return response;
   }
 }
 

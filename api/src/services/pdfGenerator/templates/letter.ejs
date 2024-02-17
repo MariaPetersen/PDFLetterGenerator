@@ -5,13 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
+        page[size="A4"] {
+            width: 21cm;
+            height: 29.7cm;
+            padding: 50px
         }
 
-        table {
-            width: "100%"
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .letter-container {
+            flex: 1;
         }
 
         .sender-info {
@@ -22,62 +35,108 @@
             text-align: left;
         }
 
+        .letter-object {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
         .letter-content {
             margin-top: 100px;
             text-align: center;
             margin-bottom: 20px;
         }
 
+        .letter-paragraph {
+            text-indent: 10mm
+        }
+
+        .letter-signature {
+            margin-top: auto;
+            text-align: end;
+        }
+
+        .letter-greeting {
+            margin-bottom: 100px;
+        }
+
         .name {
             font-weight: 600;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 50px;
+            width: 18cm;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <div class="letter-container">
-        <div class="receiver-info">
+    <page size="A4">
+
+        <div class="letter-container">
+            <div class="receiver-info">
+                <p class="name">
+                    <%= receiver.firstName %>
+                        <%= receiver.lastName.toUpperCase() %>
+                </p>
+                <p>
+                    <%= receiver.street %>
+                </p>
+                <p>
+                    <%= receiver.zip %>
+                        <%= receiver.town %>
+                </p>
+                <p>
+                    <%= receiver.country %>
+                </p>
+            </div>
+        </div>
+
+        <div class="sender-info">
             <p class="name">
-                <%= receiver.firstName %>
-                    <%= receiver.lastName.toUpperCase() %>
+                <%= sender.firstName %>
+                    <%= sender.lastName.toUpperCase() %>
             </p>
             <p>
-                <%= receiver.street %>
+                <%= sender.street %>
             </p>
             <p>
-                <%= receiver.zip %>
-                    <%= receiver.town %>
+                <%= sender.zip %>
+                    <%= sender.town %>
             </p>
             <p>
-                <%= receiver.country %>
+                <%= sender.country %>
             </p>
         </div>
-    </div>
-
-    <div class="sender-info">
-        <p class="name">
-            <%= sender.firstName %>
-                <%= sender.lastName.toUpperCase() %>
-        </p>
-        <p>
-            <%= sender.street %>
-        </p>
-        <p>
-            <%= sender.zip %>
-                <%= sender.town %>
-        </p>
-        <p>
-            <%= sender.country %>
-        </p>
-    </div>
-
-    <div class="letter-content">
-        <% paragraphs.forEach((paragraph)=> { %>
+        <div class="letter-object">
             <p>
-                <%= paragraph %>
+                Object : <%= object %>
             </p>
-            <% }); %>
-    </div>
+        </div>
+
+        <div class="letter-content">
+            <% paragraphs.forEach((paragraph)=> { %>
+                <p class="letter-paragraph">
+                    <%= paragraph %>
+                </p>
+                <% }); %>
+        </div>
+        <footer>
+            <div class="letter-greeting">
+                <p>
+                    <%= greeting %>
+                </p>
+            </div>
+            <div class="letter-signature">
+                <p>
+                    <%= sender.firstName %>
+                        <%= sender.lastName %>
+                </p>
+            </div>
+        </footer>
+    </page>
 </body>
 
 </html>

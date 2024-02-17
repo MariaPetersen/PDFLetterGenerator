@@ -1,9 +1,19 @@
 import { FormEvent, useEffect, useState } from "react";
 import AddressComponent from "./../AddressComponent/AddressComponent";
 import "./styles.scss";
+import {
+  Grid,
+  Button,
+  TextField,
+  Card,
+  CardMedia,
+  Typography,
+  Stack,
+} from "@mui/material";
 import { IAddress } from "../../interfaces/IAddress";
 import ILetterData from "../../interfaces/ILetterData";
 import Api from "../../services/Api";
+import SelectGreetingsComponent from "../SelectGreetingsComponent/SelectGreetingsComponent";
 
 function LetterForm() {
   const [sender, setSender] = useState<IAddress>({
@@ -24,7 +34,10 @@ function LetterForm() {
   });
 
   const [letterParagraphs, setLetterParagraps] = useState<Array<string>>([]);
-  const [textContent, setTextContent] = useState<string>();
+  const [object, setObject] = useState<string>("");
+  const [textContent, setTextContent] = useState<string>("");
+  const [selectedGreeting, setSelectedGreeting] = useState<string>("");
+  const [pdfURL, setPdfURL] = useState<string>();
   const api = new Api();
 
   useEffect(() => {
@@ -39,43 +52,97 @@ function LetterForm() {
     const letterData: ILetterData = {
       sender,
       receiver,
+      object,
       paragraphs: letterParagraphs,
+      greeting: selectedGreeting,
     };
-    console.log(letterData);
-    const letter = await api.generateLetterPDF(letterData);
+    api.generateLetterPDF(letterData).then((response) => {
+      console.log(response);
+      response.blob().then((blob) => {
+        const fileURL = window.URL.createObjectURL(blob);
+        setPdfURL(fileURL);
+      });
+    });
   }
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div className="address__container">
-          <div>
-            <h3>Informations de l'expéditeur</h3>
-            <AddressComponent address={sender} setAddress={setSender} />
-          </div>
-          <div>
-            <h3>Informations du déstinataire</h3>
-            <AddressComponent address={receiver} setAddress={setReceiver} />
-          </div>
-        </div>
-        <div className="letterContent__container">
-          <h3>Corps de la lettre</h3>
-          <textarea
-            name="content"
-            id="content"
-            className="letterContent__textarea"
-            rows={20}
-            value={textContent}
-            onChange={(e) => {
-              setTextContent(e.target.value);
-            }}
-          ></textarea>
-        </div>
-        {/* Select greeting */}
-        <div>
-          <button type="submit">Envoyer</button>
-        </div>
-      </form>
+      {pdfURL ? (
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={10}>
+            <Button variant="outlined" onClick={() => setPdfURL("")}>
+              Retour au formulaire
+            </Button>
+          </Grid>
+          <Grid item xs={10}>
+            <Card sx={{ height: "100%" }}>
+              <CardMedia
+                component="iframe"
+                height="140"
+                src={pdfURL}
+                sx={{ height: "100vh" }}
+              />
+            </Card>
+          </Grid>
+        </Grid>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={4} justifyContent="center">
+            <Grid item xs={4}>
+              <Stack spacing={2}>
+                <Typography variant="h5">
+                  Informations de l'expéditeur
+                </Typography>
+                <AddressComponent address={sender} setAddress={setSender} />
+              </Stack>
+            </Grid>
+            <Grid item xs={4}>
+              <Stack spacing={2}>
+                <Typography variant="h5">
+                  Informations du déstinataire
+                </Typography>
+                <AddressComponent address={receiver} setAddress={setReceiver} />
+              </Stack>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                label="Object"
+                value={object}
+                onChange={(e) => {
+                  setObject(e.target.value);
+                }}
+                sx={{ width: "100%" }}
+              />
+            </Grid>
+            <Grid item xs={10}>
+              <Stack spacing={2}>
+                <Typography variant="h5">Corps de la lettre</Typography>
+                <TextField
+                  label="Corps du texte"
+                  multiline
+                  rows={10}
+                  value={textContent}
+                  onChange={(e) => {
+                    setTextContent(e.target.value);
+                  }}
+                  sx={{ width: "100%" }}
+                />
+              </Stack>
+            </Grid>
+            <Grid item xs={10}>
+              <SelectGreetingsComponent
+                selectedGreeting={selectedGreeting}
+                setSelectedGreeting={setSelectedGreeting}
+              />
+            </Grid>
+            <Grid item xs={10}>
+              <Button type="submit" variant="outlined">
+                Envoyer
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      )}
     </div>
   );
 }

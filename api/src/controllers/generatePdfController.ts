@@ -7,8 +7,8 @@ exports.generateLetterPdfCtrl = async (
   next: NextFunction
 ) => {
   try {
-    const { receiver, sender, paragraphs } = req.body;
-    if (!receiver || !sender || !paragraphs) {
+    const { receiver, sender, paragraphs, object, greeting } = req.body;
+    if (!receiver || !sender || !paragraphs || !object || !greeting) {
       throw Error(
         "Missing parameter, request must include receiver, sender and paragraphs"
       );
@@ -17,9 +17,10 @@ exports.generateLetterPdfCtrl = async (
       receiver,
       sender,
       paragraphs,
+      object,
+      greeting,
     };
     const pdf = await generatePdf("letter.ejs", data);
-    console.log(pdf);
 
     res.contentType("application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=letter.pdf");
