@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 const { generatePdf } = require("./../services/pdfGenerator/generatePdfFile");
 
-exports.generateLetterPdfCtrl = async (
+exports.generateLetterPdf = async (
   req: Request,
   res: Response,
   next: NextFunction

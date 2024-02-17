@@ -1,9 +1,11 @@
 const express = require("express");
 var cors = require("cors");
 const dotenv = require("dotenv");
+const db = require("./services/database/database");
 import { Request, Response, NextFunction } from "express";
 
-const generatePdfRoutes = require("./routes/generatePdfRoutes");
+const generatePdfRouter = require("./routes/generatePdfRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -25,7 +27,18 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+app.get("/", async (req: Request, res: Response) => {
+  try {
+    const result = await db.query("SELECT * FROM users");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 //Routes
-app.use("/generatePdf", generatePdfRoutes);
+app.use("/generatePdf", generatePdfRouter);
+app.use("/user", userRouter);
 
 module.exports = app;

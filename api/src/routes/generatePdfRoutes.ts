@@ -1,9 +1,5 @@
-const express = require("express");
-const {
-  generateLetterPdfCtrl,
-} = require("../controllers/generatePdfController");
+const { generateLetterPdf } = require("../controllers/generatePdfController");
+const pdfRouter = require("./router");
 
-const router = express.Router();
-
-router.post("/", generateLetterPdfCtrl);
-module.exports = router;
+pdfRouter.post("/", generateLetterPdf);
+module.exports = pdfRouter;
