@@ -34,7 +34,6 @@ exports.deleteHistory = async (
     const pdfToDelete = pdfsHistory.find(
       (pdf: IPdf) => pdf.pdf_id === parseInt(id)
     );
-    console.log(pdfToDelete);
     if (!pdfToDelete) {
       throw Error("User doesn't have a pdf with the given id");
     }

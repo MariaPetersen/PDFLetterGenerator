@@ -1,15 +1,7 @@
 import React, { useContext } from "react";
-import LetterForm from "../../components/LetterForm/LetterForm";
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import AppDrawer from "../../components/Drawer/AppDrawer";
-import {
-  Typography,
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  Stack,
-} from "@mui/material";
+import { Typography, Box, Stack } from "@mui/material";
 import { AuthContext } from "../../utils/contexts/AuthContext";
 import { AuthProvider } from "../../utils/contexts/AuthContext";
 
@@ -42,7 +34,12 @@ function Home() {
             Créez votre lettre
           </Typography>
           <Outlet />
-          {/* <LetterForm /> */}
+
+          {authenticated ? (
+            <Navigate to="/generatepdf" />
+          ) : (
+            <Navigate to="/login" />
+          )}
         </Box>
       </AuthProvider>
     </Stack>

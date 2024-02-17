@@ -12,7 +12,14 @@ import { AuthContext } from "../../utils/contexts/AuthContext";
 function AppDrawer() {
   const drawerWidth = 200;
   const navigate = useNavigate();
-  const { authenticated } = useContext(AuthContext);
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setAuthenticated(false);
+    navigate("/login");
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -54,6 +61,9 @@ function AppDrawer() {
             <ListItemButton onClick={() => navigate("/history")}>
               Mon historique
             </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <ListItemButton onClick={handleLogout}>Déconnexion</ListItemButton>
           </ListItem>
         </List>
       )}

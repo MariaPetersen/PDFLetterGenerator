@@ -1,5 +1,5 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ReactNode, createContext, useEffect, useState, useMemo } from "react";
+import Api from "./../../services/Api";
 
 type AuthProviderProps = {
   children?: ReactNode;
@@ -17,11 +17,21 @@ const AuthContext = createContext<IAuthContext>({
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authenticated, setAuthenticated] = useState(false);
+  const api = useMemo(() => new Api(), []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) setAuthenticated(true);
-  }, []);
+    api
+      .isAuthenticated()
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.userId) {
+          setAuthenticated(false);
+        } else {
+          setAuthenticated(true);
+        }
+      })
+      .catch(() => setAuthenticated(false));
+  }, [api]);
 
   return (
     <AuthContext.Provider value={{ authenticated, setAuthenticated }}>

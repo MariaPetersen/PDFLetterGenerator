@@ -1,5 +1,4 @@
 import ILetterData from "../interfaces/ILetterData";
-import { IUser } from "../interfaces/IUser";
 
 class Api {
   private token: string | null;
@@ -37,6 +36,16 @@ class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
+    });
+    return response;
+  }
+  async isAuthenticated() {
+    const response = await fetch(`${process.env.REACT_APP_API}/user/isAuth`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
     });
     return response;
   }

@@ -1,6 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../utils/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 import {
   Button,
   Grid,
@@ -14,23 +12,19 @@ import Api from "../../services/Api";
 import { IHistory } from "./../../interfaces/IHistory";
 
 const History = () => {
-  const { authenticated, setAuthenticated } = useContext(AuthContext);
   const [history, setHistory] = useState<Array<IHistory>>();
   const [pdfURL, setPdfURL] = useState<string>();
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const api = new Api();
+  const api = useMemo(() => new Api(), []);
 
   useEffect(() => {
     api
       .getHistory()
-      .then((response) => response.json())
-      .then((data) => {
+      .then((response: Response) => response.json())
+      .then((data: Array<IHistory>) => {
         setHistory(data);
-        console.log(data);
       })
-      .catch((e) => console.error(e));
-  }, []);
+      .catch((e: Error) => console.error(e));
+  }, [api]);
 
   const handleDeleteHistory = (pdfId: string) => {
     api
@@ -76,9 +70,15 @@ const History = () => {
           </Grid>
         </Grid>
       ) : (
-        <Grid container spacing={2} flexDirection="column" alignItems="center">
+        <Grid
+          container
+          spacing={2}
+          flexDirection="column"
+          alignItems="center"
+          mt={6}
+        >
           {history &&
-            history.map((element) => (
+            history?.map((element) => (
               <Grid item key={element.pdf_id}>
                 <Card variant="outlined" sx={{ width: "300px" }}>
                   <CardContent>

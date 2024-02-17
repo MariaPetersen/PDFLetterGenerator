@@ -1,13 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import LoginAndSignupForm from "./pages/LoginAndSignupForm/LoginAndSignupForm";
-import { AuthContext } from "./utils/contexts/AuthContext";
 import LetterForm from "./components/LetterForm/LetterForm";
 import ProtectedRoutes from "./utils/contexts/ProtectedRoutes";
 import History from "./pages/History/History";
