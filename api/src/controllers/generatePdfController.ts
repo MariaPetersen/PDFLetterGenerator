@@ -12,9 +12,11 @@ exports.generateLetterPdf = async (
     const { receiver, sender, paragraphs, object, greeting } = req.body;
     const { userId } = req.auth;
     if (!receiver || !sender || !paragraphs || !object || !greeting) {
-      throw Error(
-        "Missing parameter, request must include receiver, sender and paragraphs"
-      );
+      res
+        .status(500)
+        .json(
+          "Missing parameter, request must include receiver, sender and paragraphs"
+        );
     }
     const data = {
       receiver,
@@ -30,7 +32,7 @@ exports.generateLetterPdf = async (
     const savedPdf = await pdfDatabase.saveUserPdf(dataJson, userId);
 
     if (!savedPdf) {
-      throw Error("Something went wrong while saving pdf");
+      res.status(500).json("Something went wrong while saving pdf");
     }
 
     res.contentType("application/pdf");

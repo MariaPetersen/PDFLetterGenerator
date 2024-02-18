@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
 import { IAddress } from "../../interfaces/IAddress";
-import "./styles.scss";
 import { Stack, TextField } from "@mui/material";
 
 type AddressComponentProps = {

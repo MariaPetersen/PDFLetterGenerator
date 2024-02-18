@@ -54,7 +54,7 @@ function AppDrawer() {
         <List>
           <ListItem>
             <ListItemButton onClick={() => navigate("/generatepdf")}>
-              Générez un PDF
+              Votre bibliographie
             </ListItemButton>
           </ListItem>
           <ListItem>

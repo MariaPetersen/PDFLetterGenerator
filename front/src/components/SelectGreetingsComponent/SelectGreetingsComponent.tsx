@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Select, FormControl, MenuItem, InputLabel } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { types } from "util";
 
 type SelectGreetingsComponentProp = {
   selectedGreeting: string;

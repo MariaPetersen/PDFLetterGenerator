@@ -13,9 +13,6 @@ exports.getHistory = async (
 
     const pdfsHistory = await pdfDatabase.getUserPdfs(userId);
 
-    res.contentType("application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=letter.pdf");
-
     res.send(pdfsHistory);
   } catch (e) {
     res.status(400);
@@ -35,13 +32,10 @@ exports.deleteHistory = async (
       (pdf: IPdf) => pdf.pdf_id === parseInt(id)
     );
     if (!pdfToDelete) {
-      throw Error("User doesn't have a pdf with the given id");
+      res.status(500).json("User doesn't have a pdf with the given id");
     }
 
     await pdfDatabase.deleteUserPdf(pdfToDelete.pdf_id);
-
-    res.contentType("application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=letter.pdf");
 
     res.send("Deleted succesfully");
   } catch (e) {

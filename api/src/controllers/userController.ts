@@ -18,7 +18,7 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
         .json("Missing parameter, request must include email and password");
     }
     const alreadyExistingUser = await userDatabase.getOneUser(email);
-    console.log(alreadyExistingUser);
+
     if (alreadyExistingUser) {
       res.status(400).json("Something went wrong during signup");
     }
@@ -40,7 +40,9 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      throw Error("Missing parameter, request must include email and password");
+      res
+        .status(400)
+        .json("Missing parameter, request must include email and password");
     }
     const user = await userDatabase.getOneUser(email);
     const valid = bcrypt.compare(password, user.password);
