@@ -12,28 +12,14 @@ Le projet a été réalisé par Maria Petersen en autonomie dans le cadre de son
 
 Notre Stack technique est composée de :
 
-- Frontend : [React]
-- Backend : [NodeJS] - [Express]
-- BDD : [SQLLite] ([Prisma])
+- Frontend : [React] - [Typescript]
+- Backend : [NodeJS] - [Express] - [Typescript]
+- BDD : [PostgreSQL]
 - Ops : [Docker]
 
-## Bonnes pratiques
+## Lancement de l'application
 
-### Variable d'environnements
+Les variables d'environnement pour le développement local sont directement disponibles dans le ficher docker-compose.
+Un fichier docker-compose est fourni avec l'application qui permet de lancer l'api, le client et la base de données. Dans le dossier racine du projet, lancer la commande :
 
-Les variables d'environnements sont stockés en local dans un fichier .env
-
-### Design Pattern
-
-- MVCs
-
-## Documentation API
-
-Voir api.json (Swagger)
-
-## Sources
-
-https://rsbh.dev/blogs/rest-api-with-express-typescript
-https://rsbh.dev/blogs/rest-api-express-typescript-docker
-https://www.youtube.com/watch?v=6p7lylJEjrU
-https://stackoverflow.com/questions/65831617/unable-to-start-react-with-typescript-in-docker-container
+    docker compose up -d
