@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        page[size="A4"] {
+            width: 21cm;
+            height: 29.7cm;
+            padding: 50px
+        }
+
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .letter-container {
+            flex: 1;
+        }
+
+        .sender-info {
+            text-align: right;
+        }
+
+        .receiver-info {
+            text-align: left;
+        }
+
+        .letter-object {
+            margin-top: 100px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .letter-handInType {
+            font-weight: bold;
+        }
+
+        .letter-content {
+            margin-top: 100px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .letter-paragraph {
+            text-indent: 2em;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .letter-signature {
+            margin-top: auto;
+            text-align: end;
+        }
+
+        .letter-greeting {
+            text-indent: 2em;
+            margin-top: 100px;
+        }
+
+        .name {
+            font-weight: 600;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 50px;
+            width: 18cm;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <page size="A4">
+
+        <div class="letter-container">
+            <div class="receiver-info">
+                <p class="name">
+                    <%= receiver.firstName %>
+                        <%= receiver.lastName.toUpperCase() %>
+                </p>
+                <p>
+                    <%= receiver.street %>
+                </p>
+                <p>
+                    <%= receiver.zip %>
+                        <%= receiver.town %>
+                </p>
+                <p>
+                    <%= receiver.country %>
+                </p>
+            </div>
+        </div>
+
+        <div class="sender-info">
+            <p class="name">
+                <%= sender.firstName %>
+                    <%= sender.lastName.toUpperCase() %>
+            </p>
+            <p>
+                <%= sender.street %>
+            </p>
+            <p>
+                <%= sender.zip %>
+                    <%= sender.town %>
+            </p>
+            <p>
+                <%= sender.country %>
+            </p>
+        </div>
+        <div>
+            <p class="letter-object">
+                Objet : Démission
+            </p>
+            <p class="letter-handInType">
+                <% if(handInType==="directHandIn" ) { %>
+                    Remise en main propre contre décharge
+                    <% } %>
+                        <% if(handInType==="letter" ) { %>
+                            Lettre recommandée avec accusé de réception
+                            <% } %>
+            </p>
+        </div>
+
+        <div class="letter-content">
+            <p class="letter-paragraph">
+                <% if(receiverGender==="other" ) { %>
+                    Madame, Monsieur,
+                    <% } %>
+                        <% if(receiverGender==="male" ){%>Monsieur,<%} %>
+                                <% if(receiverGender==="female" ){%>Madame,<%} %>
+            </p>
+            <p class="letter-paragraph">
+                Je vous informe par cette lettre de ma décision de démissionner
+                de mes fonctions de <%= jobFunction %> exercées depuis le <%= new
+                        Date(startOfContract).toLocaleDateString('fr-FR') %> au sein de
+                        l'entreprise.
+            </p>
+            <p class="letter-paragraph">
+                J'ai bien noté que les termes de mon contrat de travail prévoient un préavis de <%= notice %>.
+            </p>
+            <% if(dispenseNotice) {%>
+                <p class="letter-paragraph">
+                    Cependant, et par dérogation, je sollicite la possibilité de ne pas effectuer ce préavis et, par
+                    conséquent, de quitter l'entreprise à la date de la réception de ma lettre de démission, mettant
+                    ainsi fin à mon contrat de travail.
+                </p>
+                <p class="letter-paragraph">
+                    Je vous remercie de bien vouloir me confirmer votre accord concernant la dispense de préavis.
+                </p>
+                <% } %>
+                    <p class="letter-paragraph">
+                        Lors de mon dernier jour de travail dans l'entreprise, je vous demanderai de bien vouloir me
+                        transmettre un reçu pour solde de tout compte, un certificat de travail ainsi qu'une attestation
+                        Pôle emploi.
+                    </p>
+        </div>
+        <div class="letter-greeting">
+            <p>
+                <% if(receiverGender==="other" ) { %>
+                    Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.
+                    <% } else { %>
+                        Je vous prie d'agréer, <% if(receiverGender==="male" ){%> Monsieur<%} %>
+                                <% if(receiverGender==="female" ){%> Madame<%} %>,
+                                        l'expression de mes salutations distinguées.
+                                        <% } %>
+            </p>
+        </div>
+        <footer>
+            <div class="letter-signature">
+                <p>
+                    À <%= sender.town %> le
+                        <%= new Date().toLocaleDateString('fr-FR') %>
+                </p>
+            </div>
+            <div class="letter-signature">
+                <p>
+                    <%= sender.firstName %>
+                        <%= sender.lastName %>
+                </p>
+            </div>
+        </footer>
+    </page>
+</body>
+
+</html>

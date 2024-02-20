@@ -13,6 +13,8 @@ CREATE TABLE pdfs(
     user_id INT,
     pdf_data TEXT,
     created_at DATE,
+    type VARCHAR(255),
+    name VARCHAR(255),
     CONSTRAINT fk_user
       FOREIGN KEY(user_id) 
         REFERENCES users(user_id)

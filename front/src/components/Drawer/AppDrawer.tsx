@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../utils/contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 function AppDrawer() {
   const drawerWidth = 200;
@@ -28,7 +28,8 @@ function AppDrawer() {
         "& .MuiDrawer-paper": {
           boxSizing: "border-box",
           width: drawerWidth,
-          backgroundColor: "#b1d2bc",
+          backgroundColor: "#C5C9D3",
+          fontFamily: "Roboto",
         },
       }}
       open
@@ -54,7 +55,7 @@ function AppDrawer() {
         <List>
           <ListItem>
             <ListItemButton onClick={() => navigate("/generatepdf")}>
-              Votre bibliographie
+              Générer un PDF
             </ListItemButton>
           </ListItem>
           <ListItem>

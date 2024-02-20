@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import AppDrawer from "../../components/Drawer/AppDrawer";
 import { Typography, Box, Stack } from "@mui/material";
-import { AuthContext } from "../../utils/contexts/AuthContext";
-import { AuthProvider } from "../../utils/contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { AuthProvider } from "../../contexts/AuthContext";
 
 function Home() {
   const drawerWidth = 200;
@@ -25,14 +25,6 @@ function Home() {
             width: { sm: `calc(100% - ${drawerWidth}px)` },
           }}
         >
-          <Typography
-            variant="h2"
-            component="h1"
-            align="center"
-            className="letter__header"
-          >
-            Créez votre lettre
-          </Typography>
           <Outlet />
 
           {authenticated ? (

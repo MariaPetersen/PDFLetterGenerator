@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import LoginAndSignupForm from "./pages/LoginAndSignupForm/LoginAndSignupForm";
-import LetterForm from "./components/LetterForm/LetterForm";
-import ProtectedRoutes from "./utils/contexts/ProtectedRoutes";
+import PDFTemplates from "./pages/PDFTemplates/PDFTemplates";
+import ProtectedRoutes from "./contexts/ProtectedRoutes";
 import History from "./pages/History/History";
 
 const router = createBrowserRouter([
@@ -25,7 +25,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/generatepdf",
-            element: <LetterForm />,
+            element: <PDFTemplates />,
+          },
+          {
+            path: "/generatepdf/:id",
+            element: <PDFTemplates />,
           },
           {
             path: "/history",

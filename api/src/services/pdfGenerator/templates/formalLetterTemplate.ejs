@@ -36,8 +36,14 @@
         }
 
         .letter-object {
+            margin-top: 20px;
             text-decoration: underline;
             font-weight: bold;
+        }
+
+        .letter-date {
+            margin-top: 100px;
+            text-align: end;
         }
 
         .letter-content {
@@ -47,7 +53,9 @@
         }
 
         .letter-paragraph {
-            text-indent: 10mm
+            text-indent: 2em;
+            text-align: justify;
+            margin-bottom: 20px;
         }
 
         .letter-signature {
@@ -56,7 +64,8 @@
         }
 
         .letter-greeting {
-            margin-bottom: 100px;
+            text-indent: 2em;
+            margin-top: 100px;
         }
 
         .name {
@@ -110,9 +119,14 @@
                 <%= sender.country %>
             </p>
         </div>
+        <div class="letter-date">
+            <p>
+                À <%= sender.town %> le <%=new Date().toLocaleDateString("fr-FR")%>
+            </p>
+        </div>
         <div class="letter-object">
             <p>
-                Object : <%= object %>
+                Objet : <%= object %>
             </p>
         </div>
 
@@ -123,12 +137,12 @@
                 </p>
                 <% }); %>
         </div>
+        <div class="letter-greeting">
+            <p>
+                <%= greeting %>
+            </p>
+        </div>
         <footer>
-            <div class="letter-greeting">
-                <p>
-                    <%= greeting %>
-                </p>
-            </div>
             <div class="letter-signature">
                 <p>
                     <%= sender.firstName %>

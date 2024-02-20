@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useState, useMemo } from "react";
-import Api from "./../../services/Api";
+import Api from "../services/Api";
 
 type AuthProviderProps = {
   children?: ReactNode;
@@ -7,7 +7,7 @@ type AuthProviderProps = {
 
 type IAuthContext = {
   authenticated: boolean;
-  setAuthenticated: (newState: boolean) => void;
+  setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AuthContext = createContext<IAuthContext>({

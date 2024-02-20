@@ -1,4 +1,4 @@
-import ILetterData from "../interfaces/ILetterData";
+import { ILetterData } from "../interfaces/ILetterData";
 
 class Api {
   private token: string | null;
@@ -15,6 +15,21 @@ class Api {
       },
       body: JSON.stringify(data),
     });
+    return response;
+  }
+
+  async generateUpdatedPDF(data: ILetterData, id: string) {
+    const response = await fetch(
+      `${process.env.REACT_APP_API}/generatePdf/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
     return response;
   }
 
@@ -52,6 +67,16 @@ class Api {
 
   async getHistory() {
     const response = await fetch(`${process.env.REACT_APP_API}/history`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
+    return response;
+  }
+  async getPdfById(id: string) {
+    const response = await fetch(`${process.env.REACT_APP_API}/history/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

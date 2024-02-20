@@ -5,6 +5,8 @@ const path = require("path");
 
 const generatePdf = async (templateFileName: string, data: ILetterData) => {
   const templateFile = path.resolve(__dirname, "templates", templateFileName);
+  console.log(data);
+  console.log(templateFileName);
   return new Promise((resolve, reject) => {
     try {
       ejs.renderFile(

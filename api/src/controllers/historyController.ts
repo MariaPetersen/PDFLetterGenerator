@@ -18,6 +18,24 @@ exports.getHistory = async (
     res.status(400);
   }
 };
+
+exports.getOnePdf = async (
+  req: IAuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params;
+
+    const pdf = await pdfDatabase.getOneUserPdf(userId, id);
+
+    res.send(pdf);
+  } catch (e) {
+    res.status(400);
+  }
+};
+
 exports.deleteHistory = async (
   req: IAuthRequest,
   res: Response,
@@ -31,6 +49,7 @@ exports.deleteHistory = async (
     const pdfToDelete = pdfsHistory.find(
       (pdf: IPdf) => pdf.pdf_id === parseInt(id)
     );
+    console.log(pdfToDelete);
     if (!pdfToDelete) {
       res.status(500).json("User doesn't have a pdf with the given id");
     }

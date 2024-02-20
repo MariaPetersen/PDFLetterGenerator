@@ -3,4 +3,5 @@ export interface IHistory {
   pdf_data: string;
   type: string;
   created_at: string;
+  name: string;
 }

@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
 import AddressComponent from "./../AddressComponent/AddressComponent";
-import "./styles.scss";
 import {
   Grid,
   Button,
@@ -11,34 +10,44 @@ import {
   Stack,
 } from "@mui/material";
 import { IAddress } from "../../interfaces/IAddress";
-import ILetterData from "../../interfaces/ILetterData";
 import Api from "../../services/Api";
-import SelectGreetingsComponent from "../SelectGreetingsComponent/SelectGreetingsComponent";
+import SelectInput from "../GeneralComponents/SelectInput";
+import { greetings } from "../../constants/greetingOptions";
+import { IFormalLetter } from "../../interfaces/IFormalLetter";
+import { initialAddress } from "../../constants/initialStates";
+import { ILetterData } from "../../interfaces/ILetterData";
+import { useParams } from "react-router-dom";
 
-function LetterForm() {
-  const [sender, setSender] = useState<IAddress>({
-    firstName: "",
-    lastName: "",
-    street: "",
-    zip: "",
-    town: "",
-    country: "",
-  });
-  const [receiver, setReceiver] = useState<IAddress>({
-    firstName: "",
-    lastName: "",
-    street: "",
-    zip: "",
-    town: "",
-    country: "",
-  });
+type Props = {
+  selectedTemplate: string;
+  pdfData: string;
+};
+
+function LetterForm({ selectedTemplate, pdfData }: Props) {
+  const [sender, setSender] = useState<IAddress>(initialAddress);
+  const [receiver, setReceiver] = useState<IAddress>(initialAddress);
 
   const [letterParagraphs, setLetterParagraps] = useState<Array<string>>([]);
   const [object, setObject] = useState<string>("");
   const [textContent, setTextContent] = useState<string>("");
   const [selectedGreeting, setSelectedGreeting] = useState<string>("");
   const [pdfURL, setPdfURL] = useState<string>();
+  const [saving, setSaving] = useState<boolean>(false);
+  const { id } = useParams();
   const api = new Api();
+
+  useEffect(() => {
+    if (pdfData) {
+      const pdfObject: IFormalLetter = JSON.parse(pdfData);
+      const allTextContent = pdfObject.paragraphs.join("\n");
+      console.log(allTextContent);
+      pdfObject.sender && setSender(pdfObject.sender);
+      pdfObject.receiver && setReceiver(pdfObject.receiver);
+      pdfObject.object && setObject(pdfObject.object);
+      pdfObject.paragraphs && setTextContent(allTextContent);
+      pdfObject.greeting && setSelectedGreeting(pdfObject.greeting);
+    }
+  }, [pdfData]);
 
   useEffect(() => {
     if (textContent) {
@@ -49,19 +58,51 @@ function LetterForm() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const letterData: ILetterData = {
+    setSaving(true);
+    const letterData: IFormalLetter = {
       sender,
       receiver,
       object,
       paragraphs: letterParagraphs,
       greeting: selectedGreeting,
+      type: selectedTemplate,
     };
-    api.generateLetterPDF(letterData).then((response) => {
-      response.blob().then((blob) => {
-        const fileURL = window.URL.createObjectURL(blob);
-        setPdfURL(fileURL);
-      });
-    });
+    console.log(id);
+    if (!id) {
+      api
+        .generateLetterPDF(letterData)
+        .then((response) => {
+          response.blob().then((blob) => {
+            const fileURL = window.URL.createObjectURL(blob);
+            setPdfURL(fileURL);
+          });
+        })
+        .finally(() => {
+          setSender(initialAddress);
+          setReceiver(initialAddress);
+          setObject("");
+          setTextContent("");
+          setSelectedGreeting("");
+          setSaving(false);
+        });
+    } else {
+      api
+        .generateUpdatedPDF(letterData, id)
+        .then((response: Response) => {
+          response.blob().then((blob) => {
+            const fileURL = window.URL.createObjectURL(blob);
+            setPdfURL(fileURL);
+          });
+        })
+        .finally(() => {
+          setSender(initialAddress);
+          setReceiver(initialAddress);
+          setObject("");
+          setTextContent("");
+          setSelectedGreeting("");
+          setSaving(false);
+        });
+    }
   }
 
   return (
@@ -129,13 +170,21 @@ function LetterForm() {
               </Stack>
             </Grid>
             <Grid item xs={10}>
-              <SelectGreetingsComponent
-                selectedGreeting={selectedGreeting}
-                setSelectedGreeting={setSelectedGreeting}
+              <SelectInput
+                onChange={(value) => {
+                  setSelectedGreeting(value);
+                }}
+                options={greetings}
+                inputLabel="Choississez une formule de politesse"
+                initialValue={selectedGreeting}
               />
             </Grid>
-            <Grid item xs={10}>
-              <Button type="submit" variant="outlined">
+            <Grid
+              item
+              xs={10}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button type="submit" variant="outlined" disabled={saving}>
                 Envoyer
               </Button>
             </Grid>
