@@ -1,8 +1,10 @@
-const generatePdfController = require("../controllers/generatePdfController");
-const pdfRouter = require("./router");
+const express = require("express");
+const { generateLetterPdf, generateUpdatedPdf } = require("../controllers/generatePdfController");
+const pdfRouter = express.Router();
 const auth = require("./../middleware/auth");
 
-pdfRouter.post("/", auth, generatePdfController.generateLetterPdf);
-pdfRouter.post("/:id", auth, generatePdfController.generateUpdatedPdf);
+pdfRouter.post("/", auth, generateLetterPdf);
+pdfRouter.post("/:id", auth, generateUpdatedPdf);
 
 module.exports = pdfRouter;
+export {}

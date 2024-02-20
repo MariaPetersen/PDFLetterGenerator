@@ -11,6 +11,9 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { IAddress } from "../../interfaces/IAddress";
 import Api from "../../services/Api";
 import SelectInput from "../GeneralComponents/SelectInput";
@@ -22,6 +25,7 @@ import {
   initialResignationLetterData,
 } from "./../../constants/initialStates";
 import { useParams } from "react-router-dom";
+import dayjs from "dayjs";
 
 type Props = {
   selectedTemplate: string;
@@ -63,7 +67,7 @@ function ResignationLetterForm({ selectedTemplate, pdfData }: Props) {
       pdfObject.startOfContract &&
         setResignationLetterData({
           ...resignationLetterData,
-          startOfContract: pdfObject.startOfContract,
+          startOfContract: dayjs(pdfObject.startOfContract),
         });
       pdfObject.notice &&
         setResignationLetterData({
@@ -88,7 +92,10 @@ function ResignationLetterForm({ selectedTemplate, pdfData }: Props) {
       handInType: resignationLetterData.handInType,
       receiverGender: resignationLetterData.receiverGender,
       jobFunction: resignationLetterData.jobFunction,
-      startOfContract: resignationLetterData.startOfContract,
+      startOfContract: dayjs(resignationLetterData.startOfContract).add(
+        1,
+        "day"
+      ),
       notice: resignationLetterData.notice,
       dispenseNotice: resignationLetterData.dispenseNotice,
     };
@@ -204,18 +211,23 @@ function ResignationLetterForm({ selectedTemplate, pdfData }: Props) {
               />
             </Grid>
             <Grid item xs={5}>
-              <TextField
-                label="Début du contrat"
-                type="date"
-                value={resignationLetterData.startOfContract}
-                onChange={(e) => {
-                  setResignationLetterData({
-                    ...resignationLetterData,
-                    startOfContract: e.target.value,
-                  });
-                }}
-                sx={{ width: "100%" }}
-              />
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="fr"
+              >
+                <DatePicker
+                  label="Début du contrat"
+                  value={dayjs(resignationLetterData.startOfContract)}
+                  onChange={(value) => {
+                    setResignationLetterData({
+                      ...resignationLetterData,
+                      startOfContract: value,
+                    });
+                  }}
+                  format="DD/MM/YYYY"
+                  sx={{ width: "100%" }}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={5}>
               <TextField

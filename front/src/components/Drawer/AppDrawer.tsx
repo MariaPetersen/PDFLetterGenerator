@@ -29,7 +29,7 @@ function AppDrawer() {
           boxSizing: "border-box",
           width: drawerWidth,
           backgroundColor: "#C5C9D3",
-          fontFamily: "Roboto",
+          fontFamily: "Helvetica",
         },
       }}
       open

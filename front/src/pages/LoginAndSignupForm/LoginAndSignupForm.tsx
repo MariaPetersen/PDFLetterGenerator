@@ -12,6 +12,7 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
   const { authenticated, setAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [couldNotLogIn, setCouldNotLogin] = useState(false);
   const navigate = useNavigate();
   const api = new Api();
 
@@ -20,9 +21,14 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
       .loginUser(email, password)
       .then((response) => response.json())
       .then((data) => {
-        const { token } = data;
-        localStorage.setItem("token", token);
-        setAuthenticated(true);
+        const { token, userId } = data;
+        if (token && userId) {
+          localStorage.setItem("token", token);
+          setAuthenticated(true);
+          setCouldNotLogin(false);
+        } else {
+          setCouldNotLogin(true);
+        }
       })
       .catch(console.error);
   };
@@ -32,9 +38,14 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
       .signUpUser(email, password)
       .then((response) => response.json())
       .then((data) => {
-        const { token } = data;
-        localStorage.setItem("token", token);
-        setAuthenticated(true);
+        const { token, userId } = data;
+        if (token && userId) {
+          localStorage.setItem("token", token);
+          setAuthenticated(true);
+          setCouldNotLogin(false);
+        } else {
+          setCouldNotLogin(true);
+        }
       })
       .catch(console.error);
   };
@@ -44,13 +55,7 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
   }, [authenticated, navigate]);
 
   return (
-    <Grid
-      container
-      flexDirection="column"
-      alignItems="center"
-      spacing={2}
-      mt={6}
-    >
+    <Grid container flexDirection="column" alignItems="center" spacing={2}>
       <Grid item>
         <Typography variant="h4">
           {type === "login"
@@ -58,7 +63,7 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
             : "Créer un compte"}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item mt={10}>
         <TextField
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -74,14 +79,50 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
           type="password"
         />
       </Grid>
-      <Grid item>
-        {type === "login" && (
+      {type === "login" && (
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
           <Button onClick={handleLogin}>Connectez vous</Button>
-        )}
-        {type === "signup" && (
+          <Typography onClick={() => navigate("/signup")}>
+            Vous n'avez pas encore de compte ? Cliquez ici
+          </Typography>
+          {couldNotLogIn && (
+            <Typography
+              sx={{ color: "red" }}
+              onClick={() => navigate("/signup")}
+            >
+              L'authentification a échoué
+            </Typography>
+          )}
+        </Grid>
+      )}
+      {type === "signup" && (
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
           <Button onClick={handleSignup}>Inscrivez vous</Button>
-        )}
-      </Grid>
+          <Typography onClick={() => navigate("/login")}>
+            Vous avez déjà un compte ? Connectez-vous ici
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };

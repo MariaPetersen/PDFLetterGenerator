@@ -8,7 +8,8 @@ module.exports = (req: IAuthRequest, res: Response, next: NextFunction) => {
   try {
     const token =
       req.headers.authorization && req.headers.authorization.split(" ")[1];
-    const decodedToken = jtw.verify(token, `${KEY}`);
+    const decodedToken = jtw.verify(token, `${process.env.RANDOM_KEY}`);
+    console.log("key" + KEY);
     const userId = decodedToken.userId;
     req.auth = {
       userId: userId,

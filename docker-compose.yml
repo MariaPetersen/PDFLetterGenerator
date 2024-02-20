@@ -34,7 +34,7 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=8000
-      - KEY=PDFGenerateKey
+      - RANDOM_KEY=PDFGenerateKey
       - DB_HOST=db
     depends_on:
       - db

@@ -11,6 +11,7 @@ const KEY = process.env.RANDOM_KEY;
 
 exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("here")
     const { email, password } = req.body;
     if (!email || !password) {
       res
@@ -59,6 +60,7 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
     res.status(400);
   }
 };
+
 exports.isAuth = async (
   req: IAuthRequest,
   res: Response,

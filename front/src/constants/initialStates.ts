@@ -14,7 +14,7 @@ const initialResignationLetterData: IResignationLetter = {
   handInType: "",
   receiverGender: "",
   jobFunction: "",
-  startOfContract: "",
+  startOfContract: null,
   notice: "",
   dispenseNotice: false,
 };
