@@ -1,0 +1,57 @@
+version: "3.8"
+
+networks:
+  pdfgenerator-network:
+    driver: bridge
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pdfgenerator
+      POSTGRES_USER: pdfgenerator
+    volumes:
+      - ./dataset/database_data:/var/lib/postgresql/data
+      - ./dataset:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    networks:
+      - pdfgenerator-network
+  backend:
+    image: pdfgenerator-dev-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: pdfgenerator-backend
+    restart: always
+    volumes:
+      - ./api/src:/api/src
+    ports:
+      - 8000:8000
+    networks:
+      - pdfgenerator-network
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - RANDOM_KEY=PDFGenerateKey
+      - DB_HOST=db
+    depends_on:
+      - db
+  frontend:
+    image: pdfgenerator-dev-front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: pdfgenerator-frontend
+    environment:
+      - REACT_APP_API=http://localhost:8000
+    networks:
+      - pdfgenerator-network
+    depends_on:
+      - backend
+    volumes:
+      - ./front/src:/front/src
+      - ./front/public:/front/public
+    ports:
+      - 3000:3000
