@@ -1,8 +1,8 @@
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  user: "pdfgenerator",
-  password: "pdfgenerator",
+  user: process.env.USER,
+  password: process.env.PASSWORD,
   host: process.env.DB_HOST,
   port: 5432,
   database: "pdfgenerator",
