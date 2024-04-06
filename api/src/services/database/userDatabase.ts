@@ -9,6 +9,7 @@ exports.getOneUser = async (email: string) => {
     const user: Array<IUser> = result.rows;
     return user[0];
   } catch (e) {
+    console.log(process.env.PASSWORD);
     console.error(e + "Could not retrieve user");
   }
 };
