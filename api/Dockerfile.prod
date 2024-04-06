@@ -17,6 +17,7 @@ RUN apk add --no-cache \
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 RUN npm install
+RUN npm run build
 
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && mkdir -p /home/pptruser/Downloads /app \
@@ -24,9 +25,6 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /app
 USER pptruser
 
-ENV NODE_PATH=./build
-
 EXPOSE 8000
 
-RUN npm run build
 CMD ["node", "build/server.js"]
