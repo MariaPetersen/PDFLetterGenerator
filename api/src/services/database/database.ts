@@ -5,7 +5,7 @@ const pool = new Pool({
   password: process.env.PASSWORD,
   host: process.env.DB_HOST,
   port: 5432,
-  database: "pdfgenerator",
+  database: process.env.DATABASE,
 });
 
 module.exports = {
