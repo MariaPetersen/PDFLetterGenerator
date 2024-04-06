@@ -5,8 +5,6 @@ const path = require("path");
 
 const generatePdf = async (templateFileName: string, data: ILetterData) => {
   const templateFile = path.resolve(__dirname, "templates", templateFileName);
-  console.log(data);
-  console.log(templateFileName);
   return new Promise((resolve, reject) => {
     try {
       ejs.renderFile(
@@ -17,14 +15,19 @@ const generatePdf = async (templateFileName: string, data: ILetterData) => {
           if (err) {
             throw new Error("Something went wrong when generating PDF");
           }
+          console.log("here");
           const browser = await puppeteer.launch({
             headless: "new",
           });
+          console.log("here");
           const page = await browser.newPage();
+          console.log("here");
           await page.setContent(html);
+          console.log("here");
           const pdf = await page.pdf({
             format: "A4",
           });
+          console.log("here");
           await browser.close();
           resolve(pdf);
         }
