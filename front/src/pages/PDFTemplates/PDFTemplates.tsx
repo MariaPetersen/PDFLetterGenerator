@@ -8,7 +8,11 @@ import { useParams } from "react-router-dom";
 import Api from "../../services/Api";
 import { IHistory } from "../../interfaces/IHistory";
 
-function PDFTemplates() {
+type Props = {
+  free?: boolean
+}
+
+function PDFTemplates({free} : Props) {
   const [selectedTemplate, setSelectedTemplate] = useState<string>("");
   const [pdfData, setPdfData] = useState("");
   const { id } = useParams();
@@ -28,7 +32,7 @@ function PDFTemplates() {
 
   return (
     <Grid container spacing={2} alignItems="center" justifyContent="center">
-      <Grid item xs={10} mb={4}>
+      {/* <Grid item xs={10} mb={4}>
         <Typography
           variant="h4"
           component="h2"
@@ -37,7 +41,7 @@ function PDFTemplates() {
         >
           Générez un pdf de votre lettre
         </Typography>
-      </Grid>
+      </Grid> */}
       <Grid item xs={4}>
         <Typography component="span">Choississez votre modèle : </Typography>
         <SelectInput
@@ -48,7 +52,7 @@ function PDFTemplates() {
       </Grid>
       {selectedTemplate === "formalLetter" && (
         <Grid item xs={10}>
-          <LetterForm selectedTemplate={selectedTemplate} pdfData={pdfData} />
+          <LetterForm selectedTemplate={selectedTemplate} pdfData={pdfData} free={free}/>
         </Grid>
       )}
       {selectedTemplate === "resignationLetter" && (
@@ -56,6 +60,7 @@ function PDFTemplates() {
           <ResignationLetterForm
             selectedTemplate={selectedTemplate}
             pdfData={pdfData}
+            free={free}
           />
         </Grid>
       )}

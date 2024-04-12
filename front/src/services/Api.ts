@@ -6,8 +6,14 @@ class Api {
     this.token = localStorage.getItem("token");
   }
 
-  async generateLetterPDF(data: ILetterData) {
-    const response = await fetch(`${process.env.REACT_APP_API}/generatePdf`, {
+  async generateLetterPDF(data: ILetterData, free?: boolean) {
+    let url
+    if (free) {
+      url = `${process.env.REACT_APP_API}/generatePdf/free`
+    } else {
+      url = `${process.env.REACT_APP_API}/generatePdf`
+    }
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -21,6 +21,10 @@ const router = createBrowserRouter([
         element: <LoginAndSignupForm type="signup" />,
       },
       {
+        path: "/freepdfgenerator",
+        element: <PDFTemplates free={true}/>,
+      },
+      {
         element: <ProtectedRoutes />,
         children: [
           {

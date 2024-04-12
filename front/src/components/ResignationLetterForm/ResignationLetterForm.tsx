@@ -30,9 +30,10 @@ import dayjs from "dayjs";
 type Props = {
   selectedTemplate: string;
   pdfData: string;
+  free?: boolean;
 };
 
-function ResignationLetterForm({ selectedTemplate, pdfData }: Props) {
+function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
   const [sender, setSender] = useState<IAddress>(initialAddress);
   const [receiver, setReceiver] = useState<IAddress>(initialAddress);
   const [saving, setSaving] = useState<boolean>(false);
@@ -101,7 +102,7 @@ function ResignationLetterForm({ selectedTemplate, pdfData }: Props) {
     };
     if (!id) {
       api
-        .generateLetterPDF(letterData)
+        .generateLetterPDF(letterData, free)
         .then((response) => {
           response.blob().then((blob) => {
             const fileURL = window.URL.createObjectURL(blob);

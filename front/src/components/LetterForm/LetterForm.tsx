@@ -21,9 +21,10 @@ import { useParams } from "react-router-dom";
 type Props = {
   selectedTemplate: string;
   pdfData: string;
+  free?: boolean;
 };
 
-function LetterForm({ selectedTemplate, pdfData }: Props) {
+function LetterForm({ selectedTemplate, pdfData, free }: Props) {
   const [sender, setSender] = useState<IAddress>(initialAddress);
   const [receiver, setReceiver] = useState<IAddress>(initialAddress);
 
@@ -67,10 +68,9 @@ function LetterForm({ selectedTemplate, pdfData }: Props) {
       greeting: selectedGreeting,
       type: selectedTemplate,
     };
-    console.log(id);
     if (!id) {
       api
-        .generateLetterPDF(letterData)
+        .generateLetterPDF(letterData, free)
         .then((response) => {
           response.blob().then((blob) => {
             const fileURL = window.URL.createObjectURL(blob);

@@ -25,6 +25,14 @@ function Home() {
             width: { sm: `calc(100% - ${drawerWidth}px)` },
           }}
         >
+          <Typography
+          variant="h4"
+          component="h1"
+          align="center"
+          className="letter__header"
+        >
+          Générateur de PDF : lettre
+        </Typography>
           <Outlet />
 
           {authenticated ? (

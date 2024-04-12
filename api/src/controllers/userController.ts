@@ -11,7 +11,6 @@ const KEY = process.env.RANDOM_KEY;
 
 exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("here")
     const { email, password } = req.body;
     if (!email || !password) {
       res
@@ -57,7 +56,7 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
       }),
     });
   } catch (e) {
-    res.status(400);
+    res.status(400).json("Login failed");
   }
 };
 
