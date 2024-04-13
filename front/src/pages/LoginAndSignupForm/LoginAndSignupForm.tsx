@@ -3,6 +3,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField, Grid, Typography } from "@mui/material";
 import Api from "../../services/Api";
+import Page from "../../components/Page/Page";
+import { PageContext } from "../../contexts/PageContext";
 
 type LoginAndSignupFormProps = {
   type: "login" | "signup";
@@ -14,6 +16,7 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
   const [password, setPassword] = useState("");
   const [couldNotLogIn, setCouldNotLogin] = useState(false);
   const [loading, setLoading] = useState(false)
+  const {title, setTitle} = useContext(PageContext)
   const navigate = useNavigate();
   const api = new Api();
 
@@ -28,8 +31,10 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
           localStorage.setItem("token", token);
           setAuthenticated(true);
           setCouldNotLogin(false);
+          setLoading(false);
         } else {
           setCouldNotLogin(true);
+          setLoading(false);
         }
       })
       .catch(console.error);
@@ -62,83 +67,91 @@ const LoginAndSignupForm = ({ type }: LoginAndSignupFormProps) => {
     if (authenticated) navigate("/generatepdf");
   }, [authenticated, navigate]);
 
+  useEffect(() => {
+    setTitle("Générez une lettre en PDF avec une mise en forme automatique !")
+  }, []);
+
   return (
-    <Grid container flexDirection="column" alignItems="center" spacing={2} sx={{ mt: '30px' }}>
-      <Grid item>
-        <Typography variant="h5" sx={{textAlign: "center"}}>
-          {type === "login"
-            ? "Connectez-vous à votre compte pour garder un historique"
-            : "Créer un compte"}
-        </Typography>
-        {type === "login" && <Typography onClick={() => navigate("/freepdfgenerator")} sx={{textAlign: "center", '&:hover': {
-          cursor: "pointer"
-        }}}>
-          Ou formatez votre lettre sans vous connecter
-        </Typography>}
-      </Grid>
-      <Grid item mt={10}>
-        <TextField
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          label="Mail"
-          type="text"
-          sx={{ width: '300px'}}
-        />
-      </Grid>
-      <Grid item>
-        <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Mot de passe"
-          type="password"
-          sx={{ width: '300px'}}
-        />
-      </Grid>
-      {type === "login" && (
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          }}
-        >
-          <Button onClick={handleLogin} disabled={loading}>Connectez vous</Button>
-          <Typography onClick={() => navigate("/signup")}>
-            Vous n'avez pas encore de compte ? Cliquez ici
-          </Typography>
-          {couldNotLogIn && (
-            <Typography
-              sx={{ color: "red" }}
-              onClick={() => navigate("/signup")}
-            >
-              L'authentification a échoué
+    <Page title={title}>
+      <Grid container flexDirection="row">
+        <Grid item container flexDirection="column" alignItems="center" spacing={2}>
+          <Grid item>
+            <Typography variant="h5" sx={{textAlign: "center"}}>
+              {type === "login"
+                ? "Connectez-vous à votre compte pour garder un historique"
+                : "Créez un compte pour garder un historique de vos PDFs"}
             </Typography>
+            {type === "login" && <Typography onClick={() => navigate("/freepdfgenerator")} sx={{textAlign: "center", '&:hover': {
+              cursor: "pointer", textDecoration: "underline"
+            }}}>
+              Ou formatez votre lettre sans vous connecter en cliquant ici
+            </Typography>}
+          </Grid>
+          <Grid item mt={4}>
+            <TextField
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              label="Mail"
+              type="text"
+              sx={{ width: '300px'}}
+              />
+          </Grid>
+          <Grid item>
+            <TextField
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              label="Mot de passe"
+              type="password"
+              sx={{ width: '300px'}}
+              />
+          </Grid>
+          {type === "login" && (
+            <Grid
+            item
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+            >
+              <Button onClick={handleLogin} disabled={loading}>Connectez vous</Button>
+              <Typography onClick={() => navigate("/signup")}>
+                Vous n'avez pas encore de compte ? Cliquez ici
+              </Typography>
+              {couldNotLogIn && (
+                <Typography
+                sx={{ color: "red" }}
+                onClick={() => navigate("/signup")}
+                >
+                  L'authentification a échoué
+                </Typography>
+              )}
+            </Grid>
+          )}
+          {type === "signup" && (
+            <Grid
+            item
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+            >
+              <Button onClick={handleSignup} disabled={loading}>Inscrivez vous</Button>
+              <Typography onClick={() => navigate("/login")}>
+                Vous avez déjà un compte ? Connectez-vous ici
+              </Typography>
+            </Grid>
           )}
         </Grid>
-      )}
-      {type === "signup" && (
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          }}
-        >
-          <Button onClick={handleSignup} disabled={loading}>Inscrivez vous</Button>
-          <Typography onClick={() => navigate("/login")}>
-            Vous avez déjà un compte ? Connectez-vous ici
-          </Typography>
-        </Grid>
-      )}
-    </Grid>
+      </Grid>
+    </Page>
   );
 };
 

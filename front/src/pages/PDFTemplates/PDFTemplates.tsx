@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useContext } from "react";
 import { Grid, Typography } from "@mui/material";
 import LetterForm from "../../components/LetterForm/LetterForm";
 import SelectInput from "./../../components/GeneralComponents/SelectInput";
@@ -7,6 +7,8 @@ import ResignationLetterForm from "../../components/ResignationLetterForm/Resign
 import { useParams } from "react-router-dom";
 import Api from "../../services/Api";
 import { IHistory } from "../../interfaces/IHistory";
+import Page from "../../components/Page/Page";
+import { PageContext } from "../../contexts/PageContext";
 
 type Props = {
   free?: boolean
@@ -17,6 +19,7 @@ function PDFTemplates({free} : Props) {
   const [pdfData, setPdfData] = useState("");
   const { id } = useParams();
   const api = useMemo(() => new Api(), []);
+  const {title, setTitle} = useContext(PageContext)
 
   useEffect(() => {
     if (id) {
@@ -30,41 +33,36 @@ function PDFTemplates({free} : Props) {
     }
   }, [id, api]);
 
+  useEffect(() => {
+    setTitle("Choisissez un type de lettre !")
+  }, [])
+
   return (
-    <Grid container spacing={2} alignItems="center" justifyContent="center">
-      {/* <Grid item xs={10} mb={4}>
-        <Typography
-          variant="h4"
-          component="h2"
-          align="center"
-          className="letter__header"
-        >
-          Générez un pdf de votre lettre
-        </Typography>
-      </Grid> */}
-      <Grid item xs={4}>
-        <Typography component="span">Choississez votre modèle : </Typography>
-        <SelectInput
-          inputLabel="Type de document"
-          onChange={(value) => setSelectedTemplate(value)}
-          options={templates}
-        />
+    <Page title={title}>
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        {!selectedTemplate && <Grid item xs={10} lg={4}>
+          <SelectInput
+            inputLabel="Type de document"
+            onChange={(value) => setSelectedTemplate(value)}
+            options={templates}
+            />
+        </Grid>}
+        {selectedTemplate === "formalLetter" && (
+          <Grid item xs={10}>
+            <LetterForm selectedTemplate={selectedTemplate} pdfData={pdfData} free={free}/>
+          </Grid>
+        )}
+        {selectedTemplate === "resignationLetter" && (
+          <Grid item xs={10}>
+            <ResignationLetterForm
+              selectedTemplate={selectedTemplate}
+              pdfData={pdfData}
+              free={free}
+              />
+          </Grid>
+        )}
       </Grid>
-      {selectedTemplate === "formalLetter" && (
-        <Grid item xs={10}>
-          <LetterForm selectedTemplate={selectedTemplate} pdfData={pdfData} free={free}/>
-        </Grid>
-      )}
-      {selectedTemplate === "resignationLetter" && (
-        <Grid item xs={10}>
-          <ResignationLetterForm
-            selectedTemplate={selectedTemplate}
-            pdfData={pdfData}
-            free={free}
-          />
-        </Grid>
-      )}
-    </Grid>
+    </Page>
   );
 }
 

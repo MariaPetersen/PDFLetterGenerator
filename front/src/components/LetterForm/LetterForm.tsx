@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import AddressComponent from "./../AddressComponent/AddressComponent";
 import {
   Grid,
@@ -15,8 +15,9 @@ import SelectInput from "../GeneralComponents/SelectInput";
 import { greetings } from "../../constants/greetingOptions";
 import { IFormalLetter } from "../../interfaces/IFormalLetter";
 import { initialAddress } from "../../constants/initialStates";
-import { ILetterData } from "../../interfaces/ILetterData";
 import { useParams } from "react-router-dom";
+import { letterFormSlides, letterFormSlidesTitles } from "../../constants/letterFormSlides";
+import { PageContext } from "../../contexts/PageContext";
 
 type Props = {
   selectedTemplate: string;
@@ -34,6 +35,10 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
   const [selectedGreeting, setSelectedGreeting] = useState<string>("");
   const [pdfURL, setPdfURL] = useState<string>();
   const [saving, setSaving] = useState<boolean>(false);
+  const [currentSLide, setCurrentSlide] = useState(letterFormSlides[0])
+  const [isNextSlide, setIsNextSlide] = useState(true)
+  const [isFormerSlide, setIsFormerSlide] = useState(false)
+  const {setTitle} = useContext(PageContext)
   const { id } = useParams();
   const api = new Api();
 
@@ -41,7 +46,6 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
     if (pdfData) {
       const pdfObject: IFormalLetter = JSON.parse(pdfData);
       const allTextContent = pdfObject.paragraphs.join("\n");
-      console.log(allTextContent);
       pdfObject.sender && setSender(pdfObject.sender);
       pdfObject.receiver && setReceiver(pdfObject.receiver);
       pdfObject.object && setObject(pdfObject.object);
@@ -105,6 +109,27 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
     }
   }
 
+  const nextSlide = () => {
+    if (!isFormerSlide) {setIsFormerSlide(true)}
+    const index = letterFormSlides.findIndex((element) => element === currentSLide)
+    const nextSlide = letterFormSlides[index + 1]
+    setCurrentSlide(nextSlide)
+    setTitle(letterFormSlidesTitles[nextSlide])
+    if(index + 1 === letterFormSlides.length - 1) {
+      setIsNextSlide(false)
+    }
+  }
+  const formerSlide = () => {
+    if (!isNextSlide) {setIsNextSlide(true)}
+    const index = letterFormSlides.findIndex((element) => element === currentSLide)
+    const formerSlide = letterFormSlides[index - 1]
+    setCurrentSlide(formerSlide)
+    setTitle(letterFormSlidesTitles[formerSlide])
+    if(index - 1 === 0) {
+      setIsFormerSlide(false)
+    }
+  }
+
   return (
     <div>
       {pdfURL ? (
@@ -127,24 +152,18 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
         </Grid>
       ) : (
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={4} justifyContent="center">
-            <Grid item xs={4}>
+          <Grid container spacing={4} justifyContent="center" alignItems="center">
+           {currentSLide === "sender" && <Grid item xs={10}>
               <Stack spacing={2}>
-                <Typography variant="h5">
-                  Informations de l'expéditeur
-                </Typography>
                 <AddressComponent address={sender} setAddress={setSender} />
               </Stack>
-            </Grid>
-            <Grid item xs={4}>
+            </Grid>}
+            {currentSLide === "receiver" && <Grid item xs={10}>
               <Stack spacing={2}>
-                <Typography variant="h5">
-                  Informations du déstinataire
-                </Typography>
                 <AddressComponent address={receiver} setAddress={setReceiver} />
               </Stack>
-            </Grid>
-            <Grid item xs={10}>
+            </Grid>}
+            {currentSLide === "object" && <Grid item xs={10} width={{md: "400px"}}>
               <TextField
                 label="Object"
                 value={object}
@@ -153,10 +172,9 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
                 }}
                 sx={{ width: "100%" }}
               />
-            </Grid>
-            <Grid item xs={10}>
+            </Grid>}
+            {currentSLide === "content" && <Grid item xs={10} width={{md: "400px"}}>
               <Stack spacing={2}>
-                <Typography variant="h5">Corps de la lettre</Typography>
                 <TextField
                   label="Corps du texte"
                   multiline
@@ -168,8 +186,8 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
                   sx={{ width: "100%" }}
                 />
               </Stack>
-            </Grid>
-            <Grid item xs={10}>
+            </Grid>}
+            {currentSLide === "greeting" && <Grid item xs={10} width={{md: "400px"}}>
               <SelectInput
                 onChange={(value) => {
                   setSelectedGreeting(value);
@@ -178,8 +196,8 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
                 inputLabel="Choississez une formule de politesse"
                 initialValue={selectedGreeting}
               />
-            </Grid>
-            <Grid
+            </Grid>}
+            {currentSLide === "greeting" &&  <Grid
               item
               xs={10}
               sx={{ display: "flex", justifyContent: "center" }}
@@ -187,6 +205,10 @@ function LetterForm({ selectedTemplate, pdfData, free }: Props) {
               <Button type="submit" variant="outlined" disabled={saving}>
                 Envoyer
               </Button>
+            </Grid>}
+            <Grid item container justifyContent="space-around">
+              {isFormerSlide  && <Button onClick={formerSlide}>Précédent</Button>}
+              {isNextSlide  && <Button onClick={nextSlide}>Suivant</Button>}
             </Grid>
           </Grid>
         </form>

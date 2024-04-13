@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useContext } from "react";
 import {
   Button,
   Grid,
@@ -11,11 +11,14 @@ import {
 import Api from "../../services/Api";
 import { IHistory } from "./../../interfaces/IHistory";
 import { useNavigate } from "react-router-dom";
+import Page from "../../components/Page/Page";
+import { PageContext } from "../../contexts/PageContext";
 
 function History() {
   const [history, setHistory] = useState<Array<IHistory>>();
   const [pdfURL, setPdfURL] = useState<string>();
   const [saving, setSaving] = useState<boolean>(false);
+  const {title, setTitle} = useContext(PageContext)
   const api = useMemo(() => new Api(), []);
   const navigate = useNavigate();
   useEffect(() => {
@@ -62,8 +65,12 @@ function History() {
     navigate(`/generatePdf/${pdfId}`);
   };
 
+  useEffect(() => {
+    setTitle("Votre historique")
+  }, [])
+
   return (
-    <div>
+    <Page title={title}>
       {pdfURL ? (
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={10}>
@@ -84,24 +91,15 @@ function History() {
         </Grid>
       ) : (
         <Grid container spacing={2} flexDirection="column" alignItems="center">
-          <Grid item xs={10} mb={4}>
-            <Typography
-              variant="h4"
-              component="h2"
-              align="center"
-              className="letter__header"
-            >
-              Votre historique
-            </Typography>
-          </Grid>
           {history &&
             history?.map((element) => (
               <Grid item key={element.pdf_id} xs={12}>
                 <Card
                   variant="outlined"
                   sx={{
-                    width: "70vw",
+                    width: {xs: "80vw", lg:"40vw"},
                     display: "flex",
+                    flexDirection: {xs: "column", lg: "row"},
                     justifyContent: "space-between",
                     borderRadius: "15px",
                     backgroundColor: "#f3f4f6",
@@ -152,7 +150,7 @@ function History() {
             ))}
         </Grid>
       )}
-    </div>
+    </Page>
   );
 }
 
