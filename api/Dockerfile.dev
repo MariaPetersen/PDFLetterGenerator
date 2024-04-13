@@ -5,6 +5,9 @@ COPY tsconfig.json /api/tsconfig.json
 WORKDIR /api
 ENV PORT=8000
 ENV RANDOM_KEY=PDFGenerateKey
+ENV DB_USER=pdfgenerator
+ENV DB_PASSWORD=pdfgenerator
+ENV DATABASE=pdfgenerator
 RUN apk add --no-cache \
       chromium \
       nss \

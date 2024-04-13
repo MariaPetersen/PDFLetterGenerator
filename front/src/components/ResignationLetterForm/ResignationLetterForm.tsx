@@ -1,4 +1,4 @@
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useEffect, useContext } from "react";
 import AddressComponent from "./../AddressComponent/AddressComponent";
 import {
   Grid,
@@ -26,6 +26,9 @@ import {
 } from "./../../constants/initialStates";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import { resignationLetterSlides, resignationLetterSlidesTitles } from "../../constants/letterFormSlides";
+import { PageContext } from "../../contexts/PageContext";
+
 
 type Props = {
   selectedTemplate: string;
@@ -37,6 +40,10 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
   const [sender, setSender] = useState<IAddress>(initialAddress);
   const [receiver, setReceiver] = useState<IAddress>(initialAddress);
   const [saving, setSaving] = useState<boolean>(false);
+  const [currentSLide, setCurrentSlide] = useState(resignationLetterSlides[0])
+  const [isNextSlide, setIsNextSlide] = useState(true)
+  const [isFormerSlide, setIsFormerSlide] = useState(false)
+  const {setTitle} = useContext(PageContext)
   const { id } = useParams();
 
   const [resignationLetterData, setResignationLetterData] =
@@ -133,6 +140,27 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
     }
   }
 
+  const nextSlide = () => {
+  if (!isFormerSlide) {setIsFormerSlide(true)}
+  const index = resignationLetterSlides.findIndex((element) => element === currentSLide)
+  const nextSlide = resignationLetterSlides[index + 1]
+  setCurrentSlide(nextSlide)
+  setTitle(resignationLetterSlidesTitles[nextSlide])
+  if(index + 1 === resignationLetterSlides.length - 1) {
+    setIsNextSlide(false)
+  }
+  }
+  const formerSlide = () => {
+    if (!isNextSlide) {setIsNextSlide(true)}
+    const index = resignationLetterSlides.findIndex((element) => element === currentSLide)
+    const formerSlide = resignationLetterSlides[index - 1]
+    setCurrentSlide(formerSlide)
+    setTitle(resignationLetterSlidesTitles[formerSlide])
+    if(index - 1 === 0) {
+      setIsFormerSlide(false)
+    }
+  }
+
   return (
     <div>
       {pdfURL ? (
@@ -155,24 +183,18 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
         </Grid>
       ) : (
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={4} justifyContent="center">
-            <Grid item xs={4}>
+          <Grid container spacing={4} justifyContent="center" alignItems="center">
+            {currentSLide === "sender" && <Grid item xs={10}>
               <Stack spacing={2}>
-                <Typography variant="h5">
-                  Informations de l'expéditeur
-                </Typography>
                 <AddressComponent address={sender} setAddress={setSender} />
               </Stack>
-            </Grid>
-            <Grid item xs={4}>
+            </Grid>}
+           {currentSLide === "receiver" && <Grid item xs={10}>
               <Stack spacing={2}>
-                <Typography variant="h5">
-                  Informations du déstinataire
-                </Typography>
                 <AddressComponent address={receiver} setAddress={setReceiver} />
               </Stack>
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "type" && <Grid item xs={10} width={{md: "400px"}}>
               <SelectInput
                 onChange={(value) => {
                   setResignationLetterData({
@@ -184,8 +206,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                 inputLabel="Type de remise"
                 initialValue={resignationLetterData.handInType}
               />
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "gender" && <Grid item xs={10} width={{md: "400px"}}>
               <SelectInput
                 onChange={(value) => {
                   setResignationLetterData({
@@ -197,8 +219,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                 inputLabel="Genre du destinataire"
                 initialValue={resignationLetterData.receiverGender}
               />
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "job" && <Grid item xs={10} width={{md: "400px"}}>
               <TextField
                 label="Fonction occupée"
                 value={resignationLetterData.jobFunction}
@@ -210,8 +232,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                 }}
                 sx={{ width: "100%" }}
               />
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "startDate" && <Grid item xs={10}>
               <LocalizationProvider
                 dateAdapter={AdapterDayjs}
                 adapterLocale="fr"
@@ -229,8 +251,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                   sx={{ width: "100%" }}
                 />
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "notice" && <Grid item xs={10}>
               <TextField
                 label="Période de préavis"
                 value={resignationLetterData.notice}
@@ -242,8 +264,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                 }}
                 sx={{ width: "100%" }}
               />
-            </Grid>
-            <Grid item xs={5}>
+            </Grid>}
+            {currentSLide === "notice" && <Grid item xs={10}>
               <FormControlLabel
                 control={
                   <Switch
@@ -258,8 +280,8 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
                 }
                 label="Demander une dispense du préavis ?"
               />
-            </Grid>
-            <Grid
+            </Grid>}
+            {currentSLide === "notice" &&  <Grid
               item
               xs={10}
               sx={{ display: "flex", justifyContent: "center" }}
@@ -267,6 +289,10 @@ function ResignationLetterForm({ selectedTemplate, pdfData, free }: Props) {
               <Button type="submit" variant="outlined" disabled={saving}>
                 Envoyer
               </Button>
+            </Grid>}
+            <Grid item container justifyContent="space-around">
+              {isFormerSlide  && <Button onClick={formerSlide}>Précédent</Button>}
+              {isNextSlide  && <Button onClick={nextSlide}>Suivant</Button>}
             </Grid>
           </Grid>
         </form>

@@ -19,6 +19,7 @@ function AddressComponent({ address, setAddress }: AddressComponentProps) {
         onChange={(e) => {
           setAddress({ ...address, firstName: e.target.value });
         }}
+        fullWidth
       />
       <TextField
         size="small"

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home/Home";
+import Layout from "./pages/Layout/Layout";
 import LoginAndSignupForm from "./pages/LoginAndSignupForm/LoginAndSignupForm";
 import PDFTemplates from "./pages/PDFTemplates/PDFTemplates";
 import ProtectedRoutes from "./contexts/ProtectedRoutes";
@@ -10,7 +10,7 @@ import History from "./pages/History/History";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Layout />,
     children: [
       {
         path: "/login",

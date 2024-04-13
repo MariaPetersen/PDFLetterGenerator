@@ -54,7 +54,6 @@ exports.generateLetterPdfFree = async (
   next: NextFunction
 ) => {
   try {
-    console.log("here")
     const { receiver, sender, type } = req.body;
     console.log(req.body)
     if (!receiver || !sender || !type) {
